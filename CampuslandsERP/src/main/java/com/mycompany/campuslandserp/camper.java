@@ -18,6 +18,20 @@ public class camper {
     private String estado;
     private String riesgo;
     
+    
+    public camper (int identificacion,String nombre,String direccion,
+            String acudiente,int celular,int fijo,String estado,String riesgo){
+    this.identificacion = identificacion;
+    this.nombre = nombre;
+    this.direccion = direccion;
+    this.acudiente = acudiente;
+    this.celular = celular;
+    this.fijo = fijo;
+    this.estado = estado;
+    this.riesgo = riesgo;
+    };
+    
+    
     // Getter para identificacion
     public int getIdentificacion() {
         return identificacion;

@@ -18,7 +18,8 @@ public class MenuUsuarios {
 
             // usuarios
             usuarios.put("Camper", Arrays.asList(
-                    "Desea realizar el pre registro a campus? (Si / No)"));
+                    "Agregar nuevo usuario",
+                    "Regresar al menú principal"));
             
             usuarios.put("Trainer", Arrays.asList(
                     "Ver grupos según entrenador asignado",
@@ -49,7 +50,7 @@ public class MenuUsuarios {
                 System.out.println("4. Reportes");
                 System.out.println("5. Salir");
                 int opcionUsuario = scanner.nextInt();
-                scanner.nextLine();
+                scanner.nextLine(); // Consumir el salto de línea después de nextInt()
 
                 switch (opcionUsuario) {
                     case 5 -> {
@@ -74,45 +75,47 @@ public class MenuUsuarios {
             }
 
             int opcion = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); // Consumir el salto de línea después de nextInt()
 
-            if (opcion == opciones.size()) {
+            if (opcion == opciones.size() + 1) {
                 break;  // Regresar al menú principal
-            } 
-            
-            else if (opcion >= 1 && opcion < opciones.size()) {
+            } else if (opcion >= 1 && opcion <= opciones.size()) {
                 System.out.println("Ha seleccionado: " + opciones.get(opcion - 1));
-                ejecutarFuncion(usuario, opcion);
-            } 
-            
-            
-            else {
+                ejecutarFuncion(scanner, usuario, opcion);
+            } else {
                 System.out.println("Opción no válida. Intente nuevamente.");
             }
         }
     }
+    
+    private static void ejecutarFuncion(Scanner scanner, String usuario, int opcion) {
 
-    private static void ejecutarFuncion(String usuario, int opcion) {
         switch (usuario) {
             case "Camper" -> {
                 if (opcion == 1) {
-                    System.out.println("Ingrese 'Si' o 'No' para realizar el pre registro a campus:");
-                    Scanner scanner = new Scanner(System.in);
-                    String respuesta = scanner.nextLine();
-                    System.out.println("Respuesta registrada: " + respuesta);
+                    System.out.println("----- Agregar nuevo camper -----");
+                    System.out.println("Numero de identificacion: ");
+                    int identificacion = scanner.nextInt();
+                    scanner.nextLine(); 
+                    System.out.println("ID (" + identificacion + ") ");
+                } else {
+                    // Manejar otras opciones para Camper si es necesario
                 }
             }
+
             case "Trainer" -> {
-                // falta implementar las funciones de cada cosa
             }
+
             case "Coordinacion" -> {
-                // falta implementar las funciones de cada cosa
             }
+
             case "Reportes" -> {
-                // falta implementar las funciones de cada cosa
             }
+
             default -> System.out.println("Usuario no reconocido.");
         }
-
+        // Implementar funciones para Trainer
+        // Implementar funciones para Coordinacion
+        // Implementar funciones para Reportes
             }
 }
