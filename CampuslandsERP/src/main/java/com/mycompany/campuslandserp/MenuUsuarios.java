@@ -77,7 +77,7 @@ public class MenuUsuarios {
             int opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea después de nextInt()
 
-            if (opcion == opciones.size() + 1) {
+            if (opcion == opciones.size()) {
                 break;  // Regresar al menú principal
             } else if (opcion >= 1 && opcion <= opciones.size()) {
                 System.out.println("Ha seleccionado: " + opciones.get(opcion - 1));
@@ -98,9 +98,48 @@ public class MenuUsuarios {
                     int identificacion = scanner.nextInt();
                     scanner.nextLine(); 
                     System.out.println("ID (" + identificacion + ") ");
-                } else {
-                    // Manejar otras opciones para Camper si es necesario
-                }
+                    
+                    
+                    System.out.println("Nombres: ");
+                    String nombres = scanner.nextLine(); 
+                    System.out.println("Nombres (" + nombres + ") ");
+                    
+                    
+                    System.out.println("Apellidos: ");
+                    String apellidos = scanner.nextLine();
+                    System.out.println("Apellidos (" + apellidos + ") ");
+                    
+                    
+                    System.out.println("Direccion: ");
+                    String direccion =  scanner.nextLine();
+                    System.out.println("Direccion (" + direccion + ") ");
+                    
+                    
+                    System.out.println("Acudiente: ");
+                    String acudiente =  scanner.nextLine();
+                    System.out.println("Acudiente (" + acudiente + ") ");
+                    
+                    
+                    System.out.println("Numero celular: ");
+                    int celular = scanner.nextInt();
+                    System.out.println("Celular (" + celular + ") ");
+                    
+                    
+                    System.out.println("Numero fijo: ");
+                    int fijo = scanner.nextInt();
+                    scanner.nextLine(); 
+                    System.out.println("Fijo (" + fijo + ") ");
+                    
+                    
+                    System.out.println("Estado: ");
+                    String estado =  scanner.nextLine();
+                    System.out.println("Estado (" + estado + ") ");
+                    
+                    
+                    System.out.println("Riesgo: ");
+                    String riesgo =  scanner.nextLine();
+                    System.out.println("Riesgo (" + riesgo + ") ");              
+                } 
             }
 
             case "Trainer" -> {
@@ -114,8 +153,6 @@ public class MenuUsuarios {
 
             default -> System.out.println("Usuario no reconocido.");
         }
-        // Implementar funciones para Trainer
-        // Implementar funciones para Coordinacion
-        // Implementar funciones para Reportes
+       
             }
 }
