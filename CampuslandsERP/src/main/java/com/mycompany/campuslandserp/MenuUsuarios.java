@@ -17,9 +17,20 @@ public class MenuUsuarios {
             Map<String, List<String>> usuarios = new HashMap<>();
 
             // usuarios
-            usuarios.put("Camper", Arrays.asList("Desea realizar el pre registro a campus? (Si / No)"));
-            usuarios.put("Trainer", Arrays.asList("Ver grupos según entrenador asignado", "Ingresar notas de campers", "Regresar al menú principal"));
-            usuarios.put("Coordinacion", Arrays.asList("Ver opciones sobre los campers", "Ver opciones sobre los trainers", "Grupos (creacion, vista...)", "Regresar al menú principal"));
+            usuarios.put("Camper", Arrays.asList(
+                    "Desea realizar el pre registro a campus? (Si / No)"));
+            
+            usuarios.put("Trainer", Arrays.asList(
+                    "Ver grupos según entrenador asignado",
+                    "Ingresar notas de campers",
+                    "Regresar al menú principal"));
+            
+            usuarios.put("Coordinacion", Arrays.asList(
+                    "Ver opciones sobre los campers",
+                    "Ver opciones sobre los trainers",
+                    "Grupos (creacion, vista...)",
+                    "Regresar al menú principal"));
+            
             usuarios.put("Reportes", Arrays.asList(
                     "Listar los campers que se encuentren en estado de inscrito.",
                     "Listar los campers que aprobaron el examen inicial.",
@@ -67,10 +78,15 @@ public class MenuUsuarios {
 
             if (opcion == opciones.size()) {
                 break;  // Regresar al menú principal
-            } else if (opcion >= 1 && opcion < opciones.size()) {
+            } 
+            
+            else if (opcion >= 1 && opcion < opciones.size()) {
                 System.out.println("Ha seleccionado: " + opciones.get(opcion - 1));
                 ejecutarFuncion(usuario, opcion);
-            } else {
+            } 
+            
+            
+            else {
                 System.out.println("Opción no válida. Intente nuevamente.");
             }
         }
