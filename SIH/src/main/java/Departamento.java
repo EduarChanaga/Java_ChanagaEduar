@@ -2,38 +2,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.sih.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Departamento {
-    private int id;
     private String nombre;
-    private List<Personal> personal;
+    private List<Personal> personal = new ArrayList<>();
 
-    public Departamento() {}
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public Departamento(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void agregarPersonal(Personal personal) {
+        this.personal.add(personal);
     }
 
     public List<Personal> getPersonal() {
         return personal;
-    }
-
-    public void setPersonal(List<Personal> personal) {
-        this.personal = personal;
     }
 }
