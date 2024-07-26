@@ -16,15 +16,28 @@ public class Main {
                 System.out.println("1 - Opciones del hospital");
                 // Capturar entrada del usuario
                 int opcion = scanner.nextInt();
+                int i = 0;
+                while (i != 10){
+                    System.out.println("");
+                    i = 1 + i;
+                }
 
                 // Ejecutar la clase correspondiente según la opción
                 switch (opcion) {
                     case 1 -> {
                         System.out.println("----- Hospital -----");
                         System.out.println("1 - Agregar hospital");
+                        System.out.println("2 - Ver hospitales");
                         int opcion2 = scanner.nextInt();
+                        i = 0;
+                        while (i != 10){
+                            System.out.println("");
+                            i = 1 + i;
+                        }
+                        
                         switch (opcion2){
-                    case 1 -> Hospital.HOSPITAL();}
+                    case 1 -> Hospital.Ingresar_hospital();
+                    case 2 -> Hospital.Ver_hospital();}
                     }
                   default -> System.out.println("Opción no válida.");
                 }

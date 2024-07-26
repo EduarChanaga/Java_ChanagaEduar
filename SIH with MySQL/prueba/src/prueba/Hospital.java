@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.sql.ResultSet;
 /**
  *
  * @author camper
@@ -19,7 +20,7 @@ public class Hospital {
     }
 
         
-    public static void HOSPITAL() {
+    public static void Ingresar_hospital() {
         Hospital dao = new Hospital();
         Scanner scanner = new Scanner(System.in);
    
@@ -29,6 +30,11 @@ public class Hospital {
             
             System.out.print("Direccion: ");
             String direccion = scanner.nextLine();
+            int i = 0;
+            while (i != 10){
+                    System.out.println("");
+                    i = 1 + i;
+                }
             
            
             dao.insertarHospital(nombre, direccion);
@@ -61,6 +67,50 @@ public class Hospital {
                 try {
                     conn.close();
                 } catch (SQLException e) {
+                }
+            }
+        }
+    }
+
+
+
+
+
+public static void Ver_hospital() {
+        Hospital dao = new Hospital();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dao.conexion.conectarMySQL();
+            String query = "SELECT * FROM hospital";
+            pstmt = conn.prepareStatement(query);
+            rs = pstmt.executeQuery();
+
+            System.out.println("Lista de hospitales:");
+            while (rs.next()) {
+                int id = rs.getInt("id"); 
+                String nombre = rs.getString("nombre");
+                String direccion = rs.getString("direccion");
+                System.out.println("ID: " + id + ", Nombre: " + nombre + ", Dirección: " + direccion);
+            }
+            System.out.println("----------");
+        } catch (SQLException e) {
+            System.out.println("Error al recuperar los datos del hospital: " + e.getMessage());
+        } finally {
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    System.out.println("Error al cerrar el PreparedStatement: " + e.getMessage());
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    System.out.println("Error al cerrar la conexión: " + e.getMessage());
                 }
             }
         }
