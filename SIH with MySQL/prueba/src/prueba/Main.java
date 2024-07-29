@@ -28,6 +28,7 @@ public class Main {
                         System.out.println("----- Hospital -----");
                         System.out.println("1 - Agregar hospital");
                         System.out.println("2 - Ver hospitales");
+                        System.out.println("3 - Eliminar hospital");
                         int opcion2 = scanner.nextInt();
                         i = 0;
                         while (i != 10){
@@ -37,7 +38,9 @@ public class Main {
                         
                         switch (opcion2){
                     case 1 -> Hospital.Ingresar_hospital();
-                    case 2 -> Hospital.Ver_hospital();}
+                    case 2 -> Hospital.Ver_hospital();
+                    case 3 -> Hospital.Eliminar_hospital();
+                      }
                     }
                   default -> System.out.println("Opción no válida.");
                 }

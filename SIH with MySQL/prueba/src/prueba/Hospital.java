@@ -115,4 +115,53 @@ public static void Ver_hospital() {
             }
         }
     }
+public static void Eliminar_hospital() {
+        Hospital.Ver_hospital();
+        Hospital dao = new Hospital();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Ingrese el ID del hospital a eliminar: ");
+        int id = scanner.nextInt();
+
+        dao.eliminarHospital(id);
+    }
+
+    public void eliminarHospital(int id) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = conexion.conectarMySQL();
+            String query = "DELETE FROM hospital WHERE id = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, id);
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Hospital eliminado correctamente.");
+            } else {
+                System.out.println("No se encontró el hospital con el ID especificado.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar el hospital: " + e.getMessage());
+        } finally {
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    System.out.println("Error al cerrar el PreparedStatement: " + e.getMessage());
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    System.out.println("Error al cerrar la conexión: " + e.getMessage());
+                }
+            }
+        }
+    }
 }
+
+
+
