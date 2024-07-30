@@ -22,7 +22,7 @@ public class Paciente {
     Paciente dao = new Paciente();
     Scanner scanner = new Scanner(System.in);
 
-    System.out.println("Ingresar datos del paciente:");
+    System.out.println("Ingreso de datos del paciente:");
     System.out.print("Nombre: ");
     String nombre = scanner.nextLine();
     System.out.print("Apellido: ");
