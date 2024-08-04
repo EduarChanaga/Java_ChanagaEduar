@@ -1,10 +1,12 @@
 package baloncesto;
 
 import MySQL_Conection.ConexionMySQL;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Equipos {
     private final ConexionMySQL conexion;
@@ -32,4 +34,29 @@ public class Equipos {
             
         }
     }
+    
+    public void verEquipos() {
+        String sql = "select * from equipos";
+        try {
+            Connection conn = conexion.conectarMySQL();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nombre = rs.getString("nombre");
+                System.out.println("ID: " + id + ", Nombre: " + nombre);
+            }
+
+    
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch (SQLException e) {
+            System.out.println("Error en la vista de los datos");
+          
+        }
+    }
+
 }

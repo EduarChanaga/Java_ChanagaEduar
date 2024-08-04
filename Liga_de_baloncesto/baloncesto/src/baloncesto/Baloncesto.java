@@ -14,10 +14,13 @@ public class Baloncesto {
     Connection conn = conexion.conectarMySQL();
     if (conn != null) {
         System.out.println("Conexión establecida correctamente");
+        
         Equipos equipos = new Equipos();
+        equipos.verEquipos();
+        
+ 
         equipos.crearEquipo();
         
-       
     } else {
         System.out.println("No se pudo establecer la conexión");
     }
