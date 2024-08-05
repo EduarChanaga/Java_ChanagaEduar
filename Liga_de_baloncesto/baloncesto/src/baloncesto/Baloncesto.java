@@ -37,7 +37,7 @@ public class Baloncesto {
             if (op1 == 1){
                 System.out.println("Opciones de equipo: ");
             System.out.println("1 - Ver equipos disponibles. ");
-            System.out.println("1 - Agregar equipo. ");
+            System.out.println("2 - Agregar equipo. ");
             int nombre = baloncesto.scanner.nextInt();
             baloncesto.scanner.nextLine(); 
 
@@ -56,15 +56,17 @@ public class Baloncesto {
                 System.out.println("Opciones de equipo: ");
             System.out.println("1 - Ver partidos. ");
             System.out.println("2 - Agregar partido. ");
+            System.out.println("3 - Comenzar partido. ");
             int nombre = baloncesto.scanner.nextInt();
             baloncesto.scanner.nextLine(); 
 
-            if (nombre == 1) { 
-                partidos.verPartidos();
-            }
-            else if (nombre ==2){
-                partidos.crearPartido();
-            }
+                switch (nombre) {
+                    case 1 -> partidos.verPartidos();
+                    case 2 -> partidos.crearPartido();
+                    case 3 -> partidos.comenzarPartido();
+                    default -> {
+                    }
+                }
             
            } 
 
