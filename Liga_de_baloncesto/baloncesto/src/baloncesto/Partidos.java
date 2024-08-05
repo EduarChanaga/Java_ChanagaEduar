@@ -131,66 +131,192 @@ public class Partidos {
     }
 
     
-    public void comenzarPartido(){
-        System.out.println("----------");
-        verPartidos();
-        System.out.print("ID del partido a comenzar: ");
-        int partido = scanner.nextInt();
+public void comenzarPartido() {
+    System.out.println("----------");
+    verPartidos();
+    System.out.print("ID del partido a comenzar: ");
+    int partido = scanner.nextInt();
+    scanner.nextLine();
+
+    // Verificar si el partido ya está finalizado
+    String estadoPartido = "";
+    String sqlEstadoPartido = "SELECT estado_del_partido FROM partidos WHERE id = ?";
+    try {
+        Connection conn = conexion.conectarMySQL();
+        PreparedStatement pstmtEstado = conn.prepareStatement(sqlEstadoPartido);
+        pstmtEstado.setInt(1, partido);
+        ResultSet rsEstado = pstmtEstado.executeQuery();
+        if (rsEstado.next()) {
+            estadoPartido = rsEstado.getString("estado_del_partido");
+        }
+        rsEstado.close();
+        pstmtEstado.close();
+        conn.close();
+    } catch (SQLException e) {
+        System.out.println("Error al obtener el estado del partido");
+        return;
+    }
+
+    if ("Finalizado".equalsIgnoreCase(estadoPartido)) {
+        System.out.println("El partido ya está finalizado. No se puede comenzar un partido que ya ha sido finalizado.");
+        return;
+    }
+
+    int cestas_local = 0;
+    int cestas_visitante = 0;
+    
+    // Obtener el tipo de partido (Liga o Playoffs) para saber si es necesario hacer algo específico
+    String tipoPartido = "";
+    String sqlTipoPartido = "SELECT tipo FROM partidos WHERE id = ?";
+    try {
+        Connection conn = conexion.conectarMySQL();
+        PreparedStatement pstmtTipo = conn.prepareStatement(sqlTipoPartido);
+        pstmtTipo.setInt(1, partido);
+        ResultSet rsTipo = pstmtTipo.executeQuery();
+        if (rsTipo.next()) {
+            tipoPartido = rsTipo.getString("tipo");
+        }
+        rsTipo.close();
+        pstmtTipo.close();
+        conn.close();
+    } catch (SQLException e) {
+        System.out.println("Error al obtener el tipo de partido");
+        return;
+    }
+
+    // Variable para manejar el estado de los cestas
+    boolean terminado = false;
+
+    System.out.println("Registro de cestas:");
+    while (!terminado) {
+        System.out.println("----------------------");
+        System.out.println("¿Quién realizó la cesta?");
+        System.out.println("1. Equipo local");
+        System.out.println("2. Equipo visitante");
+        System.out.println("3. Finalizar partido");
+        int cesta = scanner.nextInt();
         scanner.nextLine();
         
-        int cestas_local = 0;
-        int cestas_visitante = 0;
-        
-        boolean cestas = false;
-        System.out.println("Registro de cestas:");
-        while (cestas == false){
-            System.out.println("----------------------");
-            System.out.println("Quien realizo cesta? ");
-            System.out.println("1. Equipo local");
-            System.out.println("2. Equipo visitante");
-            System.out.println("3. Finalizar partido");
-            int cesta = scanner.nextInt();
-            scanner.nextLine();
-            
-            switch (cesta) {
-                case 1 -> cestas_local = cestas_local + 1;
-                case 2 -> cestas_visitante = cestas_visitante + 1;
-                case 3 -> cestas = true;
-                default -> {
+        switch (cesta) {
+            case 1 -> cestas_local++;
+            case 2 -> cestas_visitante++;
+            case 3 -> {
+                // Solo permitir finalizar el partido si no es de playoffs o si hay un claro ganador
+                if ("playoffs".equalsIgnoreCase(tipoPartido)) {
+                    if (cestas_local == cestas_visitante) {
+                        System.out.println("El partido está empatado. No se puede finalizar el partido en empate durante los playoffs.");
+                        System.out.println("Continúe registrando cestas hasta que haya un ganador.");
+                    } else {
+                        terminado = true;
+                    }
+                } else {
+                    terminado = true;
                 }
             }
+            default -> System.out.println("Opción no válida.");
         }
-        String ganador = "";
-        
-        if (cestas_local>cestas_visitante){
-            ganador = "Local";
-        }
-        else if (cestas_visitante > cestas_local){
-            ganador = "Visitante";
-        }
-        else if (cestas_local == cestas_visitante){
-            ganador = "Empate";
-        }   
-        
-        System.out.println("----------------------");
-            System.out.println("----- Resultados -----");
-            System.out.println("Equipo local: "+ cestas_local);
-            System.out.println("Equipo visitante: " + cestas_visitante);
-            
-        String sql = "INSERT INTO info_partido (partido,cestas_equipo_local,cestas_equipo_visitante,ganador) VALUES (?,?,?,?)";
+    }
 
+    // Determinar el ganador final
+    String ganador;
+    if (cestas_local > cestas_visitante) {
+        ganador = "Local";
+    } else {
+        ganador = "Visitante";
+    }
+
+    System.out.println("----------------------");
+    System.out.println("----- Resultados -----");
+    System.out.println("Equipo local: " + cestas_local);
+    System.out.println("Equipo visitante: " + cestas_visitante);
+    System.out.println("Ganador: " + ganador);
+
+    // Guardar los resultados en la base de datos
+    String sqlInsertInfo = "INSERT INTO info_partido (partido, cestas_equipo_local, cestas_equipo_visitante, ganador) VALUES (?,?,?,?)";
+    String sqlUpdateEstado = "UPDATE partidos SET estado_del_partido = 'Finalizado' WHERE id = ?";
+
+    try {
+        Connection conn = conexion.conectarMySQL();
+        conn.setAutoCommit(false); // Iniciar la transacción
+
+        // Insertar la información del partido
+        PreparedStatement pstmtInsert = conn.prepareStatement(sqlInsertInfo);
+        pstmtInsert.setInt(1, partido);
+        pstmtInsert.setInt(2, cestas_local);
+        pstmtInsert.setInt(3, cestas_visitante);
+        pstmtInsert.setString(4, ganador);
+        pstmtInsert.executeUpdate();
+
+        // Actualizar el estado del partido a Finalizado
+        PreparedStatement pstmtUpdate = conn.prepareStatement(sqlUpdateEstado);
+        pstmtUpdate.setInt(1, partido);
+        pstmtUpdate.executeUpdate();
+
+        conn.commit(); // Confirmar la transacción
+
+        System.out.println("Partido finalizado correctamente");
+
+        pstmtInsert.close();
+        pstmtUpdate.close();
+        conn.close();
+    } catch (SQLException e) {
+        System.out.println("No se ha podido guardar el registro del partido o actualizar el estado");
+        e.printStackTrace();
         try {
-            Connection conn = conexion.conectarMySQL();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, partido);
-            pstmt.setInt(2, cestas_local);
-            pstmt.setInt(3, cestas_visitante);
-            pstmt.setString(4, ganador);
-            pstmt.executeUpdate();
-            System.out.println("Partido agregado correctamente");
-            
-        } catch (SQLException e) {
-            System.out.println("No se a podido guardar el registro del partido");
+            if (conexion.conectarMySQL() != null) {
+                conexion.conectarMySQL().rollback(); // Deshacer la transacción en caso de error
+            }
+        } catch (SQLException rollbackEx) {
+            System.out.println("Error al deshacer la transacción");
         }
     }
 }
+
+
+public void verResultados() {
+    verPartidos();
+    int partido;
+    System.out.println("De cual partido quiere ver los resultados?");
+    partido = scanner.nextInt();
+    scanner.nextLine();
+    
+    // Actualizamos la consulta SQL para obtener la información correcta
+    String sql = "SELECT ip.partido, ip.cestas_equipo_local, ip.cestas_equipo_visitante, ip.ganador " +
+                 "FROM info_partido ip WHERE ip.partido = ?";
+
+    try {
+        Connection conn = conexion.conectarMySQL();
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, partido); // Se establece el parámetro de la consulta
+
+        ResultSet rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+            // Extraemos los datos del ResultSet según la consulta SQL
+            String partidoNombre = rs.getString("partido");
+            int cestasEquipoLocal = rs.getInt("cestas_equipo_local");
+            int cestasEquipoVisitante = rs.getInt("cestas_equipo_visitante");
+            String ganador = rs.getString("ganador");
+
+            // Mostramos los resultados
+            System.out.println("----------");
+            System.out.println("Partido: " + partidoNombre);
+            System.out.println("Cestas equipo local: " + cestasEquipoLocal);
+            System.out.println("Cestas equipo visitante: " + cestasEquipoVisitante);
+            System.out.println("Ganador: " + ganador);
+        }
+
+        System.out.println("----------");
+        rs.close();
+        pstmt.close();
+        conn.close();
+
+    } catch (SQLException e) {
+        System.out.println("Error en la vista de los datos");
+        e.printStackTrace(); // Es útil para depurar el error
+    }
+}
+
+}
+
+

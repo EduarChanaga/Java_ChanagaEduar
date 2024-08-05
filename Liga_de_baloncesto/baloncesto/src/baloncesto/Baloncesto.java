@@ -57,6 +57,7 @@ public class Baloncesto {
             System.out.println("1 - Ver partidos. ");
             System.out.println("2 - Agregar partido. ");
             System.out.println("3 - Comenzar partido. ");
+            System.out.println("4 - Resultados partido");
             int nombre = baloncesto.scanner.nextInt();
             baloncesto.scanner.nextLine(); 
 
@@ -64,6 +65,7 @@ public class Baloncesto {
                     case 1 -> partidos.verPartidos();
                     case 2 -> partidos.crearPartido();
                     case 3 -> partidos.comenzarPartido();
+                    case 4 -> partidos.verResultados();
                     default -> {
                     }
                 }
