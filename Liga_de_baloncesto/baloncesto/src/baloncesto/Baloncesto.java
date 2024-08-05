@@ -45,7 +45,7 @@ public class Baloncesto {
                 equipos.verEquipos();
             }
             else if (nombre ==2){
-                partidos.crearPartido();
+                equipos.crearEquipo();
             }
             
            } 
@@ -54,13 +54,13 @@ public class Baloncesto {
             
             if (op1 == 2){
                 System.out.println("Opciones de equipo: ");
-            System.out.println("1 - Ver equipos disponibles. ");
+            System.out.println("1 - Ver partidos. ");
             System.out.println("2 - Agregar partido. ");
             int nombre = baloncesto.scanner.nextInt();
             baloncesto.scanner.nextLine(); 
 
             if (nombre == 1) { 
-                equipos.verEquipos();
+                partidos.verPartidos();
             }
             else if (nombre ==2){
                 partidos.crearPartido();
